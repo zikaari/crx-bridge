@@ -1,4 +1,4 @@
-import { EventEmitter } from 'events';
+import { createNanoEvents, Emitter } from 'nanoevents';
 import { JsonValue } from 'type-fest';
 
 import { Endpoint, onMessage, sendMessage } from './internal';
@@ -27,11 +27,11 @@ class Stream {
 	private static openStreams: Map<string, Stream> = new Map();
 
 	private internalInfo: StreamInfo;
-	private emitter: EventEmitter;
+	private emitter: Emitter;
 	private isClosed: boolean;
 	constructor(t: StreamInfo) {
 		this.internalInfo = t;
-		this.emitter = new EventEmitter();
+		this.emitter = createNanoEvents();
 		this.isClosed = false;
 
 		if (!Stream.initDone) {
@@ -121,15 +121,12 @@ class Stream {
 		if (!this.isClosed) {
 			this.isClosed = true;
 			this.emitter.emit('closed', true);
-			this.emitter.removeAllListeners();
+			this.emitter.events = {};
 		}
 	}
 
 	private getDisposable(event: string, callback: () => void): HybridUnsubscriber {
-		this.emitter.on(event, callback);
-		const unsub = () => {
-			this.emitter.removeListener(event, callback);
-		};
+		const unsub = this.emitter.on(event, callback);
 
 		return Object.assign(unsub, {
 			dispose: unsub,
