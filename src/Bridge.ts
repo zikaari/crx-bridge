@@ -1,4 +1,4 @@
-import { EventEmitter } from 'events';
+import { createNanoEvents } from 'nanoevents';
 import uuid from 'tiny-uid';
 
 import { StreamInfo, Stream } from './Stream';
@@ -17,25 +17,27 @@ import {
 
 const openStreams = new Map<string, Stream>();
 const onOpenStreamCallbacks = new Map<string, (stream: Stream) => void>();
-const streamyEmitter: EventEmitter = new EventEmitter();
+const streamyEmitter = createNanoEvents();
 
 onMessage<{ channel: string; streamId: string }>('__crx_bridge_stream_open__', (message) => {
 	return new Promise((resolve) => {
 		const { sender, data } = message;
 		const { channel } = data;
 		let watching = false;
+		let off = () => void 0;
+
 		const readyup = () => {
 			const callback = onOpenStreamCallbacks.get(channel);
 
 			if (typeof callback === 'function') {
 				callback(new Stream({ ...data, endpoint: sender }));
 				if (watching) {
-					streamyEmitter.removeListener('did-change-stream-callbacks', readyup);
+					off();
 				}
 				resolve(true);
 			} else if (!watching) {
 				watching = true;
-				streamyEmitter.on('did-change-stream-callbacks', readyup);
+				off = streamyEmitter.on('did-change-stream-callbacks', readyup);
 			}
 		};
 
