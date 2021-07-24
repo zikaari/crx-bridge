@@ -1,6 +1,6 @@
 import { JsonValue } from 'type-fest';
 import { browser, Runtime } from 'webextension-polyfill-ts';
-import * as serializeError from 'serialize-error';
+import { serializeError } from 'serialize-error';
 import oneline from 'oneline';
 import uuid from 'tiny-uid';
 
