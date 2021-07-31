@@ -1,12 +1,13 @@
 {
     "compilerOptions": {
-        "module": "commonjs",
-        "target": "es2018",
+        "module": "esnext",
+        "target": "esnext",
         "outDir": "./dist",
         "jsx": "react",
         "sourceMap": true,
         "declaration": true,
         "esModuleInterop": true,
+        "moduleResolution": "node",
         "declarationDir": "./dist"
     },
     "exclude": [

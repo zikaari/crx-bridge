@@ -3,7 +3,8 @@
   "version": "3.0.1",
   "description": "Messaging in Chrome extensions made easy. Out of the box.",
   "main": "dist/index.js",
-  "typings": "dist/index.d.ts",
+  "module": "dist/index.js",
+  "types": "dist/index.d.ts",
   "scripts": {
     "build": "tsc",
     "watch": "tsc -w"
