@@ -1,3 +1,6 @@
+# ⚠ Deprecation notice ⚠
+**This package is no longer in service. Use [`webext-bridge`](https://www.npmjs.com/package/webext-bridge) instead.**
+
 # crx-bridge
 
 Messaging in Chrome extensions made super easy. Out of the box.
